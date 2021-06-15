@@ -45,6 +45,16 @@ if [[ "$JUPYTER_PROGRAM_ARGS $@" != *"--ip="* ]]; then
     JUPYTER_PROGRAM_ARGS="--ip=0.0.0.0 $JUPYTER_PROGRAM_ARGS"
 fi
 
+JUPYTER_IMAGE_KUBEFLOW='true'
+env
+if [[ "$JUPYTER_IMAGE_KUBEFLOW" =~ ^(true|yes|y|1)$ ]]; then
+  export JUPYTER_PROGRAM_ARGS="--notebook-dir=/home/jovyan \
+    --no-browser --allow-root --port=8888 \
+    --NotebookApp.token='' --NotebookApp.password='' \
+    --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX} \
+    ${JUPYTER_PROGRAM_ARGS}"
+fi
+
 if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
     if [[ "$JUPYTER_ENABLE_LAB" =~ ^(true|yes|y|1)$ ]]; then
         JUPYTER_PROGRAM="jupyter labhub"
